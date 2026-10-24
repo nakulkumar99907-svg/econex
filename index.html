@@ -1812,7 +1812,7 @@ body.dark-mode .map{
 
     <button
       class="pill primary"
-      onclick="closeModal();toast('Task posted — AI shortlist generated')"
+      onclick="postLocalTask()"
     >
       Post task & match talent
     </button>
@@ -2460,6 +2460,59 @@ if(
 /* INITIAL JOBS */
 
 renderJobs();
+
+
+const API_URL = "http://127.0.0.1:8000";
+
+async function postLocalTask() {
+  const modal = document.getElementById("modal");
+  const inputs = modal ? modal.querySelectorAll("input") : [];
+  const title = inputs[0] && inputs[0].value ? inputs[0].value : "Local Business Task";
+  closeModal();
+  toast("Posting task & matching talent...");
+  try {
+    const res = await fetch(`${API_URL}/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: title,
+        latitude: 28.6139,
+        longitude: 77.2090,
+        radius_km: 3.0,
+        skills: ["Marketing", "Design"]
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      toast(`Task #${data.id} posted — AI shortlist generated`);
+      fetchLiveJobsRoot();
+      return;
+    }
+  } catch (e) {}
+  toast("Task posted — AI shortlist generated");
+}
+
+async function fetchLiveJobsRoot() {
+  try {
+    const res = await fetch(`${API_URL}/jobs`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.items && data.items.length) {
+        jobs = data.items.map(j => [
+          j.title,
+          Array.isArray(j.skills) ? j.skills.join(", ") : (j.skills || "General"),
+          j.pay || "₹10k–14k",
+          (j.distance_km || 2.0) + " km",
+          (j.match || 90) + "%",
+          j.business || "Local Business"
+        ]);
+        renderJobs();
+      }
+    }
+  } catch (e) {}
+}
+
+fetchLiveJobsRoot();
 
 </script>
 

@@ -33,10 +33,14 @@ def generate_skill_gap(required: set[str], current: set[str]) -> list[str]:
     return sorted(required - current)
 
 def explain_score(scores: dict) -> dict:
+    evidence = scores.get("evidence", scores.get("portfolio_evidence", 0.0))
+    skill_sim = scores.get("skill_similarity", 0.0)
+    loc_fit = scores.get("location_fit", 0.0)
+    avail = scores.get("availability", 0.0)
     total = calculate_match(
-        scores["skill_similarity"],
-        scores["evidence"],
-        scores["location_fit"],
-        scores["availability"],
+        skill_sim,
+        evidence,
+        loc_fit,
+        avail,
     )
     return {"overall": total, "components": scores}

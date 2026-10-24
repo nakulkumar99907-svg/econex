@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ECONEX — Hyperlocal Opportunity Network
 
 This package contains the complete working prototype plus a FastAPI backend scaffold.
@@ -39,19 +40,22 @@ Open `frontend/index.html` directly in a browser.
 
 ## Run backend
 
+You can run the backend directly with Python (no extra installations needed):
+
 ```bash
 cd backend
-python -m venv .venv
-# Windows:
-.venv\Scripts\activate
-# macOS/Linux:
-source .venv/bin/activate
+python main.py
+```
 
-pip install -r requirements.txt
+Or using uvicorn (ASGI mode):
+
+```bash
+cd backend
 uvicorn main:app --reload
 ```
 
 API docs: http://127.0.0.1:8000/docs
+Health check: http://127.0.0.1:8000/health
 
 ## Production next steps
 
@@ -65,3 +69,10 @@ API docs: http://127.0.0.1:8000/docs
 8. Connect TinyFish/Fetch/Search ingestion.
 9. Add Redis caching and background workers.
 10. Deploy frontend and API separately.
+=======
+# econex
+<br>
+this is my first repositoryc
+<br>
+noy git  not a sinly
+>>>>>>> 6be48472b163dc88e4ac971010d12719ec013fec

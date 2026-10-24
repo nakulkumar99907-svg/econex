@@ -1,5 +1,6 @@
-fastapi
-uvicorn[standard]
-pydantic
-psycopg[binary]
-SQLAlchemy
+# ECONEX Backend Requirements
+# The backend is fully self-contained and runs directly with standard Python (3.8 - 3.15+)
+# with zero required external dependencies!
+#
+# Optional ASGI server for production reload/scaling:
+uvicorn>=0.20.0
