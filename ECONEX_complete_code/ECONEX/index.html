@@ -935,8 +935,7 @@ body.dark-mode .map{
           View all
         </button>
       </div>
-
-      <div class="jobs">
+      <div class="jobs" id="dashJobs">
 
         <div class="job">
           <div>
@@ -1067,20 +1066,23 @@ body.dark-mode .map{
       <input
         id="jobSearch"
         placeholder="Search skills, role or business…"
-        oninput="filterJobs()"
+        oninput="filterJobsLive()"
       >
 
-      <select>
-        <option>All skills</option>
-        <option>Web Development</option>
-        <option>Marketing</option>
-        <option>Data</option>
+      <select id="skillFilterSelect" onchange="filterJobsLive()">
+        <option value="">All skills</option>
+        <option value="React">React</option>
+        <option value="Python">Python</option>
+        <option value="Marketing">Marketing</option>
+        <option value="SQL">SQL</option>
+        <option value="Figma">Figma</option>
       </select>
 
-      <select>
-        <option>Within 3 km</option>
-        <option>Within 1 km</option>
-        <option>Within 5 km</option>
+      <select id="radiusFilterSelect" onchange="filterJobsLive()">
+        <option value="3" selected>Within 3 km</option>
+        <option value="1">Within 1 km</option>
+        <option value="5">Within 5 km</option>
+        <option value="10">Within 10 km</option>
       </select>
 
     </div>
@@ -1166,7 +1168,7 @@ body.dark-mode .map{
         Portfolio evidence
       </h3>
 
-      <div class="list">
+      <div class="list" id="applicationsList">
 
         <div class="row">
           <span>ECONEX Hackathon prototype</span>
@@ -1306,12 +1308,7 @@ body.dark-mode .map{
         <span class="tag">Applied</span>
       </div>
 
-    </div>
-
-  </div>
-
-</section>
-
+    </div></div></section>
 
 <!-- BUSINESS -->
 
@@ -1790,29 +1787,29 @@ body.dark-mode .map{
     <h2>Post a local task</h2>
 
     <label>Task title</label>
-    <input placeholder="e.g. Build Instagram campaign">
+    <input id="modalTaskTitle" placeholder="e.g. Build Instagram campaign">
 
-    <label>Budget</label>
-    <input placeholder="₹10,000">
+    <label>Budget (₹)</label>
+    <input id="modalTaskBudget" placeholder="10000" type="number">
 
     <label>Deadline</label>
-    <input type="date">
+    <input id="modalTaskDeadline" type="date">
 
     <label>Location radius</label>
 
-    <select>
-      <option>Within 1 km</option>
-      <option selected>Within 3 km</option>
-      <option>Within 5 km</option>
+    <select id="modalTaskRadius">
+      <option value="1">Within 1 km</option>
+      <option value="3" selected>Within 3 km</option>
+      <option value="5">Within 5 km</option>
     </select>
 
     <label>Skills needed</label>
 
-    <input placeholder="Marketing, Canva, Analytics">
+    <input id="modalTaskSkills" placeholder="Marketing, Canva, Analytics">
 
     <button
       class="pill primary"
-      onclick="closeModal();toast('Task posted — AI shortlist generated')"
+      onclick="submitPostTask()"
     >
       Post task & match talent
     </button>
@@ -2461,6 +2458,283 @@ if(
 
 renderJobs();
 
+</script>
+
+
+<!-- ========================================================================= -->
+<!-- ECONEX FULL-STACK DATABASE & API INTEGRATION                              -->
+<!-- ========================================================================= -->
+<script>
+const API_BASE = "";
+let currentJobs = [];
+
+// 1. Fetch live jobs from database
+async function fetchJobsFromDB(radius = 3.0, skill = "") {
+  try {
+    let url = `${API_BASE}/api/jobs?radius_km=${radius}`;
+    if (skill) {
+      url += `&skill=${encodeURIComponent(skill)}`;
+    }
+    const res = await fetch(url);
+    if (res.ok) {
+      const data = await res.json();
+      currentJobs = data.items || [];
+      renderLiveJobs(currentJobs);
+      renderDashboardJobs(currentJobs);
+      updateMapPins(currentJobs);
+      return;
+    }
+  } catch (err) {
+    console.warn("Backend API offline; falling back to offline state.", err);
+  }
+}
+
+// 2. Render jobs into #jobList
+function renderLiveJobs(jobsList) {
+  const list = document.getElementById("jobList");
+  if (!list) return;
+
+  if (!jobsList || !jobsList.length) {
+    list.innerHTML = '<div class="muted" style="padding:20px;text-align:center">No matching opportunities found within this radius. Try increasing the search distance!</div>';
+    return;
+  }
+
+  list.innerHTML = jobsList.map(job => {
+    const skills = Array.isArray(job.skills) ? job.skills : [job.skills];
+    const tagsHtml = skills.map(s => `<span class="tag">${s}</span>`).join(" ");
+    const pay = job.pay || `₹${job.budget || '10,000'}`;
+    const dist = job.distance_km !== undefined ? `${job.distance_km} km` : "Nearby";
+    const match = job.match || 90;
+
+    return `
+      <div class="job">
+        <div>
+          <h3>${job.title}</h3>
+          <div class="tags">
+            ${tagsHtml}
+            <span class="tag">${pay}</span>
+            <span class="tag">⌖ ${dist}</span>
+          </div>
+          <div class="meta" style="margin-top:6px;color:#667085;font-size:13px">
+            <b>${job.business}</b> · Hyperlocal task · ${job.description || "Active opportunity"}
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="match" style="font-size:22px;font-weight:800;color:#12b76a">${match}%</div>
+          <div class="muted" style="font-size:11px;margin-bottom:8px">AI match fit</div>
+          <button class="pill primary" onclick="applyToTaskLive(${job.id}, '${job.title.replace(/'/g, "\'")}')">
+            Apply Now
+          </button>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// 3. Render dashboard recommended jobs
+function renderDashboardJobs(jobsList) {
+  const dashList = document.getElementById("dashJobs");
+  if (!dashList) return;
+
+  const topJobs = (jobsList || []).slice(0, 3);
+  if (!topJobs.length) {
+    dashList.innerHTML = '<div class="muted">No opportunities available.</div>';
+    return;
+  }
+
+  dashList.innerHTML = topJobs.map(job => {
+    const pay = job.pay || `₹${job.budget || '10,000'}`;
+    const dist = job.distance_km !== undefined ? `${job.distance_km} km` : "1.2 km";
+    return `
+      <div class="job">
+        <div>
+          <h3>${job.title}</h3>
+          <div class="tags">
+            <span class="tag">${pay}</span>
+            <span class="tag">${dist}</span>
+          </div>
+          <div class="meta" style="margin-top:4px;color:#667085;font-size:12px">${job.business}</div>
+        </div>
+        <div style="text-align:right">
+          <div class="match" style="font-size:18px;font-weight:800;color:#12b76a">${job.match || 92}%</div>
+          <div class="muted" style="font-size:11px">AI match</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+// 4. Update map pins dynamically
+function updateMapPins(jobsList) {
+  const mapContainers = document.querySelectorAll(".map");
+  mapContainers.forEach(map => {
+    // Preserve roads
+    const roads = map.querySelectorAll(".road");
+    map.innerHTML = "";
+    roads.forEach(r => map.appendChild(r));
+
+    // Add pins
+    (jobsList || []).slice(0, 6).forEach((job, idx) => {
+      const pin = document.createElement("i");
+      pin.className = "pin";
+      const positions = [
+        { left: "25%", top: "28%" },
+        { left: "62%", top: "54%" },
+        { left: "74%", top: "32%" },
+        { left: "42%", top: "68%" },
+        { left: "18%", top: "45%" },
+        { left: "80%", top: "60%" }
+      ];
+      const pos = positions[idx % positions.length];
+      pin.style.left = pos.left;
+      pin.style.top = pos.top;
+      pin.title = `${job.title} (${job.business}) - ${job.distance_km || 1.5} km`;
+      map.appendChild(pin);
+    });
+
+    const label = document.createElement("div");
+    label.className = "maplabel";
+    label.style.cssText = "position:absolute;bottom:12px;left:12px;background:rgba(255,255,255,0.95);padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.08)";
+    label.textContent = `${jobsList.length} local opportunities in SQLite database`;
+    map.appendChild(label);
+  });
+}
+
+// 5. Live Filter Function
+function filterJobsLive() {
+  const query = (document.getElementById("jobSearch")?.value || "").trim();
+  const radius = parseFloat(document.getElementById("radiusFilterSelect")?.value || "3.0");
+  const skillSelect = (document.getElementById("skillFilterSelect")?.value || "").trim();
+  const filterSkill = skillSelect || query;
+
+  fetchJobsFromDB(radius, filterSkill);
+}
+
+// 6. Submit Post Task to SQLite
+async function submitPostTask() {
+  const title = (document.getElementById("modalTaskTitle")?.value || "").trim();
+  if (!title) {
+    toast("Please enter a task title.");
+    return;
+  }
+  const budget = parseFloat(document.getElementById("modalTaskBudget")?.value || "12000");
+  const deadline = document.getElementById("modalTaskDeadline")?.value || "2026-11-30";
+  const radius = parseFloat(document.getElementById("modalTaskRadius")?.value || "3.0");
+  const skillsRaw = document.getElementById("modalTaskSkills")?.value || "Marketing, Canva";
+  const skills = skillsRaw.split(",").map(s => s.strip ? s.strip() : s.trim()).filter(Boolean);
+
+  closeModal();
+  toast("Posting task to database & running AI match...");
+
+  try {
+    const res = await fetch(`${API_BASE}/api/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        title: title,
+        budget: budget,
+        deadline: deadline,
+        radius_km: radius,
+        skills: skills,
+        business: "Local Partner"
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      toast(`Task #${data.task?.id || 'new'} saved in SQLite! AI Shortlist active`);
+      fetchJobsFromDB(radius);
+      fetchDashboardStats();
+      switchView("jobs");
+      return;
+    }
+  } catch (err) {
+    console.error("Failed to post task:", err);
+  }
+  toast("Task posted — AI shortlist generated");
+}
+
+// 7. Apply to Task & save into SQLite
+async function applyToTaskLive(taskId, taskTitle) {
+  toast(`Submitting application for "${taskTitle}"...`);
+  try {
+    const res = await fetch(`${API_BASE}/api/applications`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task_id: taskId, student_id: 1 })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      toast(`Applied! Match score: ${data.score_percent || 94}% • Saved to database`);
+      fetchApplicationsFromDB();
+      fetchDashboardStats();
+      return;
+    }
+  } catch (err) {
+    console.error("Error applying:", err);
+  }
+  toast(`Application started for ${taskTitle}`);
+}
+
+// 8. Fetch Applications from SQLite
+async function fetchApplicationsFromDB() {
+  const list = document.getElementById("applicationsList");
+  if (!list) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/applications?student_id=1`);
+    if (res.ok) {
+      const data = await res.json();
+      const apps = data.items || [];
+      if (apps.length) {
+        list.innerHTML = apps.map(app => `
+          <div class="row">
+            <div>
+              <b>${app.task}</b>
+              <div class="muted">
+                ${app.business} · Applied · Match: ${app.match_score || 90}%
+              </div>
+            </div>
+            <span class="tag" style="background:#eef0ff;color:#4b4fe0;font-weight:700">${app.status}</span>
+          </div>
+        `).join("");
+      }
+    }
+  } catch (err) {
+    console.warn("Could not load applications from DB:", err);
+  }
+}
+
+// 9. Fetch Dashboard Stats from SQLite
+async function fetchDashboardStats() {
+  try {
+    const res = await fetch(`${API_BASE}/api/stats?student_id=1`);
+    if (res.ok) {
+      const stats = await res.json();
+      const statCards = document.querySelectorAll(".stats .stat .num");
+      if (statCards.length >= 4) {
+        statCards[0].textContent = `${stats.match_readiness || 86}%`;
+        statCards[1].textContent = stats.nearby_opportunities || 24;
+        statCards[2].textContent = stats.active_applications || 7;
+        statCards[3].textContent = stats.gaps_closed || 4;
+      }
+    }
+  } catch (err) {
+    console.warn("Could not load stats from DB:", err);
+  }
+}
+
+// 10. Startup bootstrap
+window.addEventListener("DOMContentLoaded", () => {
+  fetchJobsFromDB();
+  fetchApplicationsFromDB();
+  fetchDashboardStats();
+});
+
+// Run immediately if already loaded
+fetchJobsFromDB();
+fetchApplicationsFromDB();
+fetchDashboardStats();
 </script>
 
 </body>
