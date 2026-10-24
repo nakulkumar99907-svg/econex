@@ -1,0 +1,2467 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ECONEX — Hyperlocal Opportunity Network</title>
+
+<style>
+:root{
+  --primary:#5b5cf0;
+  --primary-light:#eef0ff;
+  --bg:#f6f8fc;
+  --surface:#fff;
+  --text:#101828;
+  --muted:#667085;
+  --border:#e6e9f0;
+  --green:#12b76a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  min-height:100vh;
+}
+
+/* TOP BAR */
+.topbar{
+  height:70px;
+  padding:0 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:20px;
+  font-weight:850;
+}
+
+.logo{
+  width:35px;
+  height:35px;
+  border-radius:11px;
+  background:var(--primary);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+}
+
+.brand small{
+  display:block;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:600;
+}
+
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:9px;
+}
+
+.pill{
+  padding:9px 13px;
+  border-radius:10px;
+  border:1px solid #dfe3eb;
+  background:#fff;
+  color:#344054;
+}
+
+.pill:hover{
+  transform:translateY(-1px);
+}
+
+.primary{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+/* LAYOUT */
+.layout{
+  display:grid;
+  grid-template-columns:300px 1fr;
+  min-height:calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+.sidebar{
+  background:#fff;
+  border-right:1px solid var(--border);
+  padding:22px 14px;
+}
+
+.nav-title{
+  color:#98a2b3;
+  font-size:11px;
+  font-weight:800;
+  margin:16px 12px 8px;
+  text-transform:uppercase;
+}
+
+.nav{
+  display:grid;
+  gap:6px;
+}
+
+.nav button{
+  border:0;
+  background:transparent;
+  text-align:left;
+  padding:13px 12px;
+  border-radius:10px;
+  color:#475467;
+}
+
+.nav button:hover,
+.nav button.active{
+  background:var(--primary-light);
+  color:#4b4fe0;
+  font-weight:750;
+}
+
+/* MAIN */
+.main{
+  padding:30px;
+  max-width:1500px;
+  width:100%;
+  margin:auto;
+}
+
+.view{
+  display:none;
+}
+
+.view.active{
+  display:block;
+}
+
+/* HERO */
+.hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:20px;
+  margin-bottom:22px;
+}
+
+.eyebrow{
+  color:var(--primary);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.hero h1{
+  font-size:38px;
+  line-height:1.05;
+  margin:7px 0 10px;
+}
+
+.hero p{
+  color:var(--muted);
+  max-width:680px;
+  margin:0;
+}
+
+/* CARDS */
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 4px 18px rgba(16,24,40,.035);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:18px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-bottom:20px;
+}
+
+.stat .label{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:700;
+}
+
+.stat .num{
+  font-size:28px;
+  font-weight:850;
+  margin:8px 0 3px;
+}
+
+.delta{
+  color:var(--green);
+  font-size:12px;
+  font-weight:750;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:14px;
+}
+
+.section-head h2{
+  font-size:17px;
+  margin:0;
+}
+
+.muted{
+  color:var(--muted);
+  font-size:13px;
+}
+
+/* JOBS */
+.jobs{
+  display:grid;
+  gap:10px;
+}
+
+.job{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  padding:14px;
+  border:1px solid #edf0f4;
+  border-radius:13px;
+}
+
+.job h3{
+  margin:0 0 6px;
+  font-size:15px;
+}
+
+.job .meta{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:8px;
+}
+
+.tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.tag{
+  background:#f2f4f7;
+  color:#475467;
+  padding:5px 7px;
+  border-radius:7px;
+  font-size:11px;
+}
+
+.match{
+  color:var(--green);
+  font-size:21px;
+  font-weight:850;
+  text-align:right;
+}
+
+/* MAP */
+.map{
+  height:270px;
+  position:relative;
+  overflow:hidden;
+  border-radius:14px;
+  background:
+    radial-gradient(circle at 30% 25%,#d9f2e8 0 10%,transparent 11%),
+    radial-gradient(circle at 70% 65%,#e4e5ff 0 12%,transparent 13%),
+    linear-gradient(135deg,#f0f4fa,#e8edf5);
+}
+
+.road{
+  position:absolute;
+  width:120%;
+  height:15px;
+  left:-10%;
+  top:42%;
+  background:white;
+  border:1px solid #dce2eb;
+  transform:rotate(25deg);
+}
+
+.road.r2{
+  top:68%;
+  transform:rotate(-17deg);
+}
+
+.pin{
+  position:absolute;
+  width:15px;
+  height:15px;
+  border-radius:50% 50% 50% 0;
+  background:var(--primary);
+  transform:rotate(-45deg);
+  box-shadow:0 0 0 6px rgba(91,92,240,.12);
+}
+
+.pin:after{
+  content:"";
+  width:5px;
+  height:5px;
+  background:white;
+  border-radius:50%;
+  position:absolute;
+  left:5px;
+  top:5px;
+}
+
+.maplabel{
+  position:absolute;
+  left:12px;
+  bottom:12px;
+  padding:7px 9px;
+  background:white;
+  border:1px solid #e4e7ec;
+  border-radius:9px;
+  font-size:11px;
+  font-weight:750;
+}
+
+/* PROFILE */
+.profile{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:14px;
+  align-items:center;
+}
+
+.avatar{
+  width:54px;
+  height:54px;
+  border-radius:16px;
+  background:#e9eaff;
+  display:grid;
+  place-items:center;
+  color:#4b4fe0;
+  font-weight:850;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  padding:10px 0;
+  border-bottom:1px solid #eef0f3;
+}
+
+.row:last-child{
+  border-bottom:0;
+}
+
+/* SEARCH */
+.searchbar{
+  display:flex;
+  gap:8px;
+  margin-bottom:16px;
+}
+
+.searchbar input,
+.searchbar select{
+  flex:1;
+  padding:11px 12px;
+  border:1px solid #dfe3eb;
+  border-radius:11px;
+  background:#fff;
+}
+
+/* BUSINESS */
+.business-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.candidate{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  padding:12px 0;
+  border-bottom:1px solid #eef0f3;
+}
+
+.candidate:last-child{
+  border-bottom:0;
+}
+
+.mini-avatar{
+  width:40px;
+  height:40px;
+  border-radius:12px;
+  background:#f0f2ff;
+  display:grid;
+  place-items:center;
+  color:#5155df;
+  font-weight:800;
+}
+
+.score{
+  margin-left:auto;
+  color:var(--green);
+  font-weight:850;
+}
+
+.btnrow{
+  display:flex;
+  gap:8px;
+  margin-top:14px;
+}
+
+/* AI */
+.ai{
+  border:1px solid #dfe0ff;
+  background:linear-gradient(135deg,#f7f7ff,#fff);
+}
+
+.progress{
+  height:7px;
+  background:#eef0f4;
+  border-radius:99px;
+  overflow:hidden;
+}
+
+.progress i{
+  display:block;
+  height:100%;
+  background:var(--primary);
+  border-radius:99px;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  right:22px;
+  bottom:22px;
+  z-index:100;
+  display:none;
+  padding:12px 15px;
+  background:#101828;
+  color:#fff;
+  border-radius:10px;
+  font-size:13px;
+}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  background:rgba(16,24,40,.45);
+  z-index:50;
+}
+
+.modal-card{
+  width:min(580px,92vw);
+  padding:22px;
+  border-radius:18px;
+  background:#fff;
+}
+
+.modal-card input,
+.modal-card textarea,
+.modal-card select{
+  width:100%;
+  padding:11px;
+  margin:6px 0 12px;
+  border:1px solid #dfe3eb;
+  border-radius:9px;
+}
+
+.close{
+  float:right;
+  border:0;
+  background:#f2f4f7;
+  padding:7px;
+  border-radius:8px;
+}
+
+/* AUTH */
+.auth-gate{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:linear-gradient(135deg,#f7f8ff,#eef1ff);
+  display:grid;
+  place-items:center;
+  padding:24px;
+}
+
+.auth-gate.hidden{
+  display:none;
+}
+
+.auth-shell{
+  width:min(980px,96vw);
+  min-height:590px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  overflow:hidden;
+  border-radius:28px;
+  background:#fff;
+  box-shadow:0 25px 80px rgba(16,24,40,.16);
+}
+
+.auth-visual{
+  padding:48px;
+  background:linear-gradient(145deg,#171b3c,#5b5cf0);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+.auth-logo{
+  font-size:22px;
+  font-weight:900;
+}
+
+.auth-logo span{
+  display:inline-grid;
+  place-items:center;
+  width:38px;
+  height:38px;
+  margin-right:8px;
+  border-radius:12px;
+  background:#fff;
+  color:#4b4fe0;
+}
+
+.auth-visual h1{
+  font-size:44px;
+  line-height:1.02;
+  margin:30px 0 14px;
+}
+
+.auth-visual p{
+  color:#dce1ff;
+  line-height:1.6;
+}
+
+.auth-points{
+  display:grid;
+  gap:10px;
+}
+
+.auth-point{
+  padding:12px 14px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:12px;
+  background:rgba(255,255,255,.08);
+}
+
+.auth-form{
+  padding:44px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.auth-form h2{
+  font-size:30px;
+  margin:0 0 8px;
+}
+
+.auth-form>p{
+  color:#667085;
+  margin:0 0 22px;
+}
+
+.auth-tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  padding:4px;
+  margin-bottom:18px;
+  border-radius:10px;
+  background:#f2f4f7;
+}
+
+.auth-tabs button{
+  border:0;
+  padding:10px;
+  border-radius:8px;
+  background:transparent;
+}
+
+.auth-tabs button.active{
+  background:#fff;
+  font-weight:800;
+}
+
+.auth-field{
+  margin-bottom:13px;
+}
+
+.auth-field label{
+  display:block;
+  margin-bottom:6px;
+  font-size:12px;
+  font-weight:750;
+}
+
+.auth-field input,
+.auth-field select{
+  width:100%;
+  padding:12px;
+  border:1px solid #dfe3eb;
+  border-radius:10px;
+}
+
+.auth-submit{
+  width:100%;
+  padding:13px;
+  border:0;
+  border-radius:10px;
+  background:var(--primary);
+  color:white;
+  font-weight:800;
+}
+
+.auth-error{
+  min-height:18px;
+  color:#d92d20;
+  font-size:12px;
+}
+
+.auth-note{
+  margin-top:12px;
+  text-align:center;
+  color:#98a2b3;
+  font-size:11px;
+}
+
+.auth-user{
+  color:#667085;
+  font-size:12px;
+}
+
+.logout-btn{
+  border:1px solid #dfe3eb;
+  background:#fff;
+  padding:9px 12px;
+  border-radius:10px;
+}
+
+/* DARK MODE */
+body.dark-mode{
+  --bg:#0f172a;
+  --surface:#172033;
+  --text:#f8fafc;
+  --muted:#b6c0cf;
+  --border:#334155;
+}
+
+body.dark-mode .topbar,
+body.dark-mode .sidebar,
+body.dark-mode .card,
+body.dark-mode .modal-card{
+  background:#172033;
+  color:#f8fafc;
+  border-color:#334155;
+}
+
+body.dark-mode .pill,
+body.dark-mode .searchbar input,
+body.dark-mode .searchbar select,
+body.dark-mode .logout-btn{
+  background:#202b3d;
+  color:#fff;
+  border-color:#3b4a61;
+}
+
+body.dark-mode .job,
+body.dark-mode .row{
+  border-color:#334155;
+}
+
+body.dark-mode .tag{
+  background:#202b3d;
+  color:#d6deea;
+}
+
+body.dark-mode .map{
+  background:linear-gradient(135deg,#172033,#243149);
+}
+
+/* RESPONSIVE */
+@media(max-width:1050px){
+  .layout{
+    grid-template-columns:235px 1fr;
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .grid,
+  .business-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:700px){
+  .topbar{
+    padding:0 14px;
+  }
+
+  .layout{
+    grid-template-columns:205px 1fr;
+  }
+
+  .sidebar{
+    padding:16px 8px;
+  }
+
+  .sidebar .label{
+    display:block;
+    font-size:12px;
+  }
+
+  .nav button{
+    padding:11px 8px;
+  }
+
+  .nav-title{
+    font-size:10px;
+    margin:12px 8px 7px;
+  }
+
+  .main{
+    padding:18px;
+  }
+
+  .hero{
+    display:block;
+  }
+
+  .stats{
+    grid-template-columns:1fr;
+  }
+
+  .searchbar{
+    flex-direction:column;
+  }
+
+  .auth-shell{
+    grid-template-columns:1fr;
+    min-height:auto;
+  }
+
+  .auth-visual{
+    display:none;
+  }
+
+  .auth-form{
+    padding:30px 22px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<header class="topbar">
+
+  <div class="brand">
+    <div class="logo">E</div>
+    <div>
+      ECONEX
+      <small>Hyperlocal Opportunity Network</small>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <button class="pill" onclick="toast('3 km hyperlocal radius active')">
+      ⌖ 3 km radius
+    </button>
+
+    <button class="pill primary" onclick="openModal()">
+      Post a task
+    </button>
+  </div>
+
+</header>
+
+<div class="layout">
+
+<aside class="sidebar">
+
+  <div class="nav-title">Main Sections</div>
+
+  <div class="nav">
+
+    <button class="active" data-view="dashboard">
+      <span class="label">⌂ Dashboard</span>
+    </button>
+
+    <button data-view="jobs">
+      <span class="label">⌕ Jobs</span>
+    </button>
+
+    <button data-view="profile">
+      <span class="label">● Profile</span>
+    </button>
+
+    <button data-view="applications">
+      <span class="label">✓ Apps</span>
+    </button>
+
+    <button data-view="business">
+      <span class="label">▣ Business</span>
+    </button>
+
+    <button data-view="ai">
+      <span class="label">✦ AI Match</span>
+    </button>
+
+    <button data-view="studentpro">
+      <span class="label">★ Pro</span>
+    </button>
+
+  </div>
+
+</aside>
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="view active">
+
+  <div class="hero">
+
+    <div>
+      <div class="eyebrow">Student command center</div>
+
+      <h1>
+        Turn local demand into your next opportunity.
+      </h1>
+
+      <p>
+        ECONEX connects students with nearby businesses using
+        skills, evidence, AI matching and a 3 km hyperlocal model.
+      </p>
+    </div>
+
+    <button class="pill primary" onclick="switchView('jobs')">
+      Explore opportunities →
+    </button>
+
+  </div>
+
+  <div class="stats">
+
+    <div class="card stat">
+      <div class="label">AI match readiness</div>
+      <div class="num">86%</div>
+      <div class="delta">↑ 12% this month</div>
+    </div>
+
+    <div class="card stat">
+      <div class="label">Nearby opportunities</div>
+      <div class="num">24</div>
+      <div class="delta">8 posted today</div>
+    </div>
+
+    <div class="card stat">
+      <div class="label">Applications active</div>
+      <div class="num">7</div>
+      <div class="delta">2 interviews</div>
+    </div>
+
+    <div class="card stat">
+      <div class="label">Skill gaps closed</div>
+      <div class="num">4</div>
+      <div class="delta">↑ 2 this week</div>
+    </div>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+
+      <div class="section-head">
+        <h2>Recommended nearby jobs</h2>
+        <button class="pill" onclick="switchView('jobs')">
+          View all
+        </button>
+      </div>
+
+      <div class="jobs">
+
+        <div class="job">
+          <div>
+            <h3>Local Business Growth Intern</h3>
+
+            <div class="tags">
+              <span class="tag">Digital Marketing</span>
+              <span class="tag">₹8k–12k</span>
+              <span class="tag">1.4 km</span>
+            </div>
+
+            <div class="meta">
+              GreenLeaf Cafe · Part-time · 18 days
+            </div>
+          </div>
+
+          <div>
+            <div class="match">94%</div>
+            <div class="muted">AI match</div>
+          </div>
+        </div>
+
+        <div class="job">
+
+          <div>
+            <h3>React Website Sprint</h3>
+
+            <div class="tags">
+              <span class="tag">React</span>
+              <span class="tag">UI</span>
+              <span class="tag">2.1 km</span>
+            </div>
+
+            <div class="meta">
+              Nexa Retail · Fixed ₹15k · 9 days
+            </div>
+          </div>
+
+          <div>
+            <div class="match">89%</div>
+            <div class="muted">AI match</div>
+          </div>
+
+        </div>
+
+        <div class="job">
+
+          <div>
+            <h3>Student Data Analyst</h3>
+
+            <div class="tags">
+              <span class="tag">Python</span>
+              <span class="tag">SQL</span>
+              <span class="tag">0.8 km</span>
+            </div>
+
+            <div class="meta">
+              CampusCart · Flexible · 14 days
+            </div>
+          </div>
+
+          <div>
+            <div class="match">84%</div>
+            <div class="muted">AI match</div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card">
+
+      <div class="section-head">
+        <h2>Hyperlocal opportunity map</h2>
+
+        <button class="pill" onclick="switchView('jobs')">
+          Nearby jobs
+        </button>
+      </div>
+
+      <div class="map">
+
+        <div class="road"></div>
+        <div class="road r2"></div>
+
+        <i class="pin" style="left:27%;top:28%"></i>
+        <i class="pin" style="left:62%;top:56%"></i>
+        <i class="pin" style="left:74%;top:30%"></i>
+        <i class="pin" style="left:42%;top:70%"></i>
+
+        <div class="maplabel">
+          12 high-fit opportunities inside 3 km
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- JOBS -->
+
+<section id="jobs" class="view">
+
+  <div class="hero">
+
+    <div>
+      <div class="eyebrow">Discover</div>
+      <h1>Local Opportunities</h1>
+
+      <p>
+        Search and rank nearby work by skills, AI fit,
+        pay, distance and deadline.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="searchbar">
+
+      <input
+        id="jobSearch"
+        placeholder="Search skills, role or business…"
+        oninput="filterJobs()"
+      >
+
+      <select>
+        <option>All skills</option>
+        <option>Web Development</option>
+        <option>Marketing</option>
+        <option>Data</option>
+      </select>
+
+      <select>
+        <option>Within 3 km</option>
+        <option>Within 1 km</option>
+        <option>Within 5 km</option>
+      </select>
+
+    </div>
+
+    <div class="jobs" id="jobList"></div>
+
+  </div>
+
+</section>
+
+
+<!-- PROFILE -->
+
+<section id="profile" class="view">
+
+  <div class="hero">
+
+    <div>
+      <div class="eyebrow">Student profile</div>
+
+      <h1>Your opportunity profile</h1>
+
+      <p>
+        Skills, portfolio evidence and learning progress
+        feed the AI matching engine.
+      </p>
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+
+      <button class="pill" onclick="openAuth('login')">
+        Login
+      </button>
+
+      <button class="pill primary" onclick="openAuth('signup')">
+        Create account
+      </button>
+
+      <button class="pill" onclick="toggleTheme()">
+        ☾ Theme
+      </button>
+
+      <button class="pill primary" onclick="toast('Profile saved')">
+        Save changes
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+
+      <div class="profile">
+
+        <div class="avatar">NK</div>
+
+        <div>
+          <b>Nakul Kumar</b>
+
+          <div class="muted">
+            CSE · 2nd year · Available 15 hrs/week
+          </div>
+        </div>
+
+      </div>
+
+      <hr style="border:0;border-top:1px solid #eef0f3;margin:18px 0">
+
+      <h3>Skills & portfolio</h3>
+
+      <div class="tags">
+        <span class="tag">C++</span>
+        <span class="tag">Python</span>
+        <span class="tag">React</span>
+        <span class="tag">SQL</span>
+        <span class="tag">Figma</span>
+        <span class="tag">Communication</span>
+      </div>
+
+      <h3 style="margin-top:20px">
+        Portfolio evidence
+      </h3>
+
+      <div class="list">
+
+        <div class="row">
+          <span>ECONEX Hackathon prototype</span>
+          <b>Verified</b>
+        </div>
+
+        <div class="row">
+          <span>React dashboard project</span>
+          <b>Verified</b>
+        </div>
+
+        <div class="row">
+          <span>Campus society coordinator</span>
+          <b>Pending</b>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="card ai">
+
+      <div class="section-head">
+        <h2>AI profile score</h2>
+        <b style="color:#4b4fe0;font-size:24px">86%</b>
+      </div>
+
+      <p class="muted">
+        Strong fit for local web, growth and data roles.
+      </p>
+
+      <div class="progress">
+        <i style="width:86%"></i>
+      </div>
+
+      <h3>Top skill gaps</h3>
+
+      <div class="row">
+        <span>SEO analytics</span>
+        <b>32%</b>
+      </div>
+
+      <div class="row">
+        <span>Client pitching</span>
+        <b>41%</b>
+      </div>
+
+      <div class="row">
+        <span>Advanced SQL</span>
+        <b>54%</b>
+      </div>
+
+      <button
+        class="pill primary"
+        style="margin-top:15px"
+        onclick="switchView('ai')"
+      >
+        Open skill-gap plan
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- APPLICATIONS -->
+
+<section id="applications" class="view">
+
+  <div class="hero">
+
+    <div>
+      <div class="eyebrow">Track progress</div>
+
+      <h1>Applications</h1>
+
+      <p>
+        One place for applied, shortlisted, interview
+        and selected opportunities.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="toggle" style="display:flex;gap:8px;margin-bottom:15px">
+
+      <button class="pill primary">All 7</button>
+      <button class="pill">Shortlisted 2</button>
+      <button class="pill">Interview 2</button>
+      <button class="pill">Selected 1</button>
+
+    </div>
+
+    <div class="list">
+
+      <div class="row">
+        <div>
+          <b>Local Business Growth Intern</b>
+          <div class="muted">
+            GreenLeaf Cafe · Applied 2 days ago
+          </div>
+        </div>
+        <span class="tag">Interview</span>
+      </div>
+
+      <div class="row">
+        <div>
+          <b>React Website Sprint</b>
+          <div class="muted">
+            Nexa Retail · Applied yesterday
+          </div>
+        </div>
+        <span class="tag">Shortlisted</span>
+      </div>
+
+      <div class="row">
+        <div>
+          <b>Student Data Analyst</b>
+          <div class="muted">
+            CampusCart · Applied 4 days ago
+          </div>
+        </div>
+        <span class="tag">Selected</span>
+      </div>
+
+      <div class="row">
+        <div>
+          <b>Content & Community Intern</b>
+          <div class="muted">
+            UrbanBites · Applied 6 days ago
+          </div>
+        </div>
+        <span class="tag">Applied</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- BUSINESS -->
+
+<section id="business" class="view">
+
+  <div class="hero">
+
+    <div>
+      <div class="eyebrow">Business workspace</div>
+
+      <h1>Hire local student talent</h1>
+
+      <p>
+        Post a task, define budget, deadline and location
+        and let ECONEX shortlist candidates with
+        evidence-backed match scores.
+      </p>
+    </div>
+
+    <button class="pill primary" onclick="openModal()">
+      + Post local task
+    </button>
+
+  </div>
+
+  <div class="business-grid">
+
+    <div class="card">
+
+      <div class="section-head">
+        <h2>Open task</h2>
+        <span class="tag">AI sourcing active</span>
+      </div>
+
+      <h3>
+        Build a mobile-first landing page
+      </h3>
+
+      <div class="tags">
+        <span class="tag">React</span>
+        <span class="tag">UI/UX</span>
+        <span class="tag">SEO</span>
+      </div>
+
+      <div class="list" style="margin-top:12px">
+
+        <div class="row">
+          <span>Budget</span>
+          <b>₹18,000</b>
+        </div>
+
+        <div class="row">
+          <span>Deadline</span>
+          <b>12 Nov 2026</b>
+        </div>
+
+        <div class="row">
+          <span>Location</span>
+          <b>2.4 km radius</b>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="section-head">
+        <h2>AI talent shortlist</h2>
+        <span class="muted">8 candidates</span>
+      </div>
+
+      <div class="candidate">
+
+        <div class="mini-avatar">NK</div>
+
+        <div>
+          <b>Nakul Kumar</b>
+          <div class="muted">
+            React · Figma · Portfolio verified
+          </div>
+        </div>
+
+        <span class="score">96%</span>
+
+      </div>
+
+      <div class="candidate">
+
+        <div class="mini-avatar">AS</div>
+
+        <div>
+          <b>Aarav Sharma</b>
+          <div class="muted">
+            React · Next.js · 3 projects
+          </div>
+        </div>
+
+        <span class="score">92%</span>
+
+      </div>
+
+      <div class="candidate">
+
+        <div class="mini-avatar">RS</div>
+
+        <div>
+          <b>Riya Singh</b>
+          <div class="muted">
+            UI · React · Client work
+          </div>
+        </div>
+
+        <span class="score">89%</span>
+
+      </div>
+
+      <div class="btnrow">
+
+        <button
+          class="pill primary"
+          onclick="toast('Candidates shortlisted')"
+        >
+          Shortlist top 3
+        </button>
+
+        <button
+          class="pill"
+          onclick="toast('Evidence view opened')"
+        >
+          Evidence view
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- AI MATCH -->
+
+<section id="ai" class="view">
+
+  <div class="hero">
+
+    <div>
+      <div class="eyebrow">ECONEX Intelligence</div>
+
+      <h1>AI Match & Skill Gap</h1>
+
+      <p>
+        ECONEX compares your skills, portfolio evidence,
+        distance, availability and local demand to find
+        your strongest opportunities.
+      </p>
+    </div>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card ai">
+
+      <div class="section-head">
+        <h2>Your AI Match Score</h2>
+        <b style="font-size:30px;color:#12b76a">86%</b>
+      </div>
+
+      <div class="progress">
+        <i style="width:86%"></i>
+      </div>
+
+      <h3>How ECONEX calculates it</h3>
+
+      <div class="row">
+        <span>Skill compatibility</span>
+        <b>92%</b>
+      </div>
+
+      <div class="row">
+        <span>Portfolio evidence</span>
+        <b>88%</b>
+      </div>
+
+      <div class="row">
+        <span>Location fit</span>
+        <b>95%</b>
+      </div>
+
+      <div class="row">
+        <span>Availability</span>
+        <b>76%</b>
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>Skill-gap analysis</h2>
+
+      <p class="muted">
+        These skills can increase your local opportunity score.
+      </p>
+
+      <div class="row">
+        <span>Advanced SQL</span>
+        <span class="tag">High priority</span>
+      </div>
+
+      <div class="row">
+        <span>SEO Analytics</span>
+        <span class="tag">Medium</span>
+      </div>
+
+      <div class="row">
+        <span>Client pitching</span>
+        <span class="tag">Medium</span>
+      </div>
+
+      <button
+        class="pill primary"
+        onclick="switchView('studentpro')"
+      >
+        Learn → Apply
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- STUDENT PRO -->
+
+<section id="studentpro" class="view">
+
+  <div class="hero">
+
+    <div>
+
+      <div class="eyebrow">Student Pro</div>
+
+      <h1>
+        Learn skills that unlock better opportunities.
+      </h1>
+
+      <p>
+        Access paid, career-focused courses designed around
+        your ECONEX skill gaps and nearby opportunity demand.
+      </p>
+
+    </div>
+
+    <button
+      class="pill primary"
+      onclick="toast('Student Pro checkout opened')"
+    >
+      Upgrade to Pro
+    </button>
+
+  </div>
+
+  <div class="grid">
+
+    <div class="card">
+
+      <div class="section-head">
+        <h2>Career skill courses</h2>
+        <span class="tag">AI selected</span>
+      </div>
+
+      <div class="list">
+
+        <div class="row">
+
+          <div>
+            <b>Web Development Bootcamp</b>
+            <div class="muted">
+              HTML, CSS, JavaScript, React ·
+              32 lessons · 4 projects · Certificate
+            </div>
+          </div>
+
+          <strong>₹1,499</strong>
+
+          <button
+            class="pill"
+            onclick="toast('Web Development course opened')"
+          >
+            View
+          </button>
+
+        </div>
+
+
+        <div class="row">
+
+          <div>
+            <b>Video Editing Masterclass</b>
+            <div class="muted">
+              Premiere Pro, CapCut, Reels &
+              YouTube editing · 24 lessons
+            </div>
+          </div>
+
+          <strong>₹999</strong>
+
+          <button
+            class="pill"
+            onclick="toast('Video Editing course opened')"
+          >
+            View
+          </button>
+
+        </div>
+
+
+        <div class="row">
+
+          <div>
+            <b>Graphic Design & Canva</b>
+            <div class="muted">
+              Social media creatives, branding &
+              posters · 20 lessons
+            </div>
+          </div>
+
+          <strong>₹799</strong>
+
+          <button
+            class="pill"
+            onclick="toast('Graphic Design course opened')"
+          >
+            View
+          </button>
+
+        </div>
+
+
+        <div class="row">
+
+          <div>
+            <b>Advanced SQL for Data Roles</b>
+            <div class="muted">
+              SQL, dashboards & data analysis ·
+              18 lessons · Certificate
+            </div>
+          </div>
+
+          <strong>₹799</strong>
+
+          <button
+            class="pill"
+            onclick="toast('SQL course opened')"
+          >
+            View
+          </button>
+
+        </div>
+
+
+        <div class="row">
+
+          <div>
+            <b>Digital Marketing & SEO</b>
+            <div class="muted">
+              SEO, social media, analytics &
+              local-business growth
+            </div>
+          </div>
+
+          <strong>₹699</strong>
+
+          <button
+            class="pill"
+            onclick="toast('Digital Marketing course opened')"
+          >
+            View
+          </button>
+
+        </div>
+
+
+        <div class="row">
+
+          <div>
+            <b>Figma UI/UX Career Track</b>
+            <div class="muted">
+              UI design, prototyping &
+              portfolio building
+            </div>
+          </div>
+
+          <strong>₹899</strong>
+
+          <button
+            class="pill"
+            onclick="toast('Figma course opened')"
+          >
+            View
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="card ai">
+
+      <h2>Your Pro learning plan</h2>
+
+      <p class="muted">
+        AI prioritizes courses from your current
+        skill gaps and nearby demand.
+      </p>
+
+      <div class="row">
+        <span>1. Web Development</span>
+        <span class="tag">High demand</span>
+      </div>
+
+      <div class="row">
+        <span>2. Video Editing</span>
+        <span class="tag">42% gap</span>
+      </div>
+
+      <div class="row">
+        <span>3. SEO Analytics</span>
+        <span class="tag">32% gap</span>
+      </div>
+
+      <div class="progress" style="margin-top:15px">
+        <i style="width:38%"></i>
+      </div>
+
+      <p class="muted">
+        38% of your recommended learning path completed.
+      </p>
+
+      <button
+        class="pill primary"
+        onclick="toast('Learning plan started')"
+      >
+        Continue learning
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+</div>
+
+</div>
+
+
+<!-- POST TASK MODAL -->
+
+<div class="modal" id="modal">
+
+  <div class="modal-card">
+
+    <button class="close" onclick="closeModal()">×</button>
+
+    <h2>Post a local task</h2>
+
+    <label>Task title</label>
+    <input placeholder="e.g. Build Instagram campaign">
+
+    <label>Budget</label>
+    <input placeholder="₹10,000">
+
+    <label>Deadline</label>
+    <input type="date">
+
+    <label>Location radius</label>
+
+    <select>
+      <option>Within 1 km</option>
+      <option selected>Within 3 km</option>
+      <option>Within 5 km</option>
+    </select>
+
+    <label>Skills needed</label>
+
+    <input placeholder="Marketing, Canva, Analytics">
+
+    <button
+      class="pill primary"
+      onclick="closeModal();toast('Task posted — AI shortlist generated')"
+    >
+      Post task & match talent
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- AUTH MODAL -->
+
+<div class="auth-gate hidden" id="authGate">
+
+  <div class="auth-shell">
+
+    <div class="auth-visual">
+
+      <div>
+
+        <div class="auth-logo">
+          <span>E</span> ECONEX
+        </div>
+
+        <h1>
+          Local talent.<br>
+          Real opportunity.
+        </h1>
+
+        <p>
+          Connect with nearby businesses, discover
+          high-fit work and turn your skills into
+          measurable experience.
+        </p>
+
+      </div>
+
+      <div class="auth-points">
+
+        <div class="auth-point">
+          ✦ AI-powered skill matching
+        </div>
+
+        <div class="auth-point">
+          ⌖ Hyperlocal opportunities within 3 km
+        </div>
+
+        <div class="auth-point">
+          ✓ Portfolio evidence + skill-gap pathway
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="auth-form">
+
+      <button
+        class="close"
+        onclick="closeAuth()"
+      >
+        ×
+      </button>
+
+      <h2 id="authTitle">
+        Welcome back
+      </h2>
+
+      <p id="authSubtitle">
+        Sign in to continue to your ECONEX workspace.
+      </p>
+
+      <div class="auth-tabs">
+
+        <button
+          id="loginTab"
+          class="active"
+          onclick="setAuthMode('login')"
+        >
+          Login
+        </button>
+
+        <button
+          id="signupTab"
+          onclick="setAuthMode('signup')"
+        >
+          Create account
+        </button>
+
+      </div>
+
+      <div class="auth-error" id="authError"></div>
+
+      <form id="authForm">
+
+        <div
+          class="auth-field"
+          id="nameField"
+          style="display:none"
+        >
+          <label>Full name</label>
+          <input
+            id="authName"
+            placeholder="Your name"
+          >
+        </div>
+
+        <div class="auth-field">
+
+          <label>Email</label>
+
+          <input
+            id="authEmail"
+            type="email"
+            placeholder="you@example.com"
+            required
+          >
+
+        </div>
+
+        <div class="auth-field">
+
+          <label>Password</label>
+
+          <input
+            id="authPassword"
+            type="password"
+            placeholder="Minimum 6 characters"
+            minlength="6"
+            required
+          >
+
+        </div>
+
+        <div
+          class="auth-field"
+          id="roleField"
+          style="display:none"
+        >
+
+          <label>Account type</label>
+
+          <select id="authRole">
+            <option value="student">Student</option>
+            <option value="business">Business</option>
+          </select>
+
+        </div>
+
+        <button
+          class="auth-submit"
+          type="submit"
+          id="authSubmit"
+        >
+          Login to ECONEX
+        </button>
+
+      </form>
+
+      <div class="auth-note">
+        Demo authentication — stored locally in this browser.
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* JOB DATA */
+
+const jobs = [
+
+  [
+    "Local Business Growth Intern",
+    "Digital Marketing",
+    "₹8k–12k",
+    "1.4 km",
+    "94%",
+    "GreenLeaf Cafe"
+  ],
+
+  [
+    "React Website Sprint",
+    "React, UI",
+    "₹15k fixed",
+    "2.1 km",
+    "89%",
+    "Nexa Retail"
+  ],
+
+  [
+    "Student Data Analyst",
+    "Python, SQL",
+    "₹10k–14k",
+    "0.8 km",
+    "84%",
+    "CampusCart"
+  ],
+
+  [
+    "Content & Community Intern",
+    "Content, Social",
+    "₹7k–10k",
+    "2.7 km",
+    "81%",
+    "UrbanBites"
+  ],
+
+  [
+    "Figma Product Design Task",
+    "Figma, UX",
+    "₹12k fixed",
+    "1.9 km",
+    "88%",
+    "Makers Hub"
+  ]
+
+];
+
+
+/* RENDER JOBS */
+
+function renderJobs(filter=""){
+
+  const list = document.getElementById("jobList");
+
+  const result = jobs.filter(job =>
+    job.join(" ").toLowerCase().includes(filter.toLowerCase())
+  );
+
+  if(!result.length){
+
+    list.innerHTML =
+      '<div class="muted">No matching opportunities.</div>';
+
+    return;
+  }
+
+  list.innerHTML = result.map(job => `
+
+    <div class="job">
+
+      <div>
+
+        <h3>${job[0]}</h3>
+
+        <div class="tags">
+
+          <span class="tag">${job[1]}</span>
+          <span class="tag">${job[2]}</span>
+          <span class="tag">${job[3]}</span>
+
+        </div>
+
+        <div class="meta">
+          ${job[5]} · Local task · Apply now
+        </div>
+
+      </div>
+
+      <div>
+
+        <div class="match">
+          ${job[4]}
+        </div>
+
+        <button
+          class="pill"
+          onclick="toast('Application started for ${job[0]}')"
+        >
+          Apply
+        </button>
+
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+
+/* FILTER */
+
+function filterJobs(){
+
+  const value =
+    document.getElementById("jobSearch").value;
+
+  renderJobs(value);
+
+}
+
+
+/* SWITCH VIEW */
+
+function switchView(id){
+
+  document
+    .querySelectorAll(".view")
+    .forEach(view =>
+      view.classList.remove("active")
+    );
+
+  document
+    .getElementById(id)
+    .classList.add("active");
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(button =>
+      button.classList.toggle(
+        "active",
+        button.dataset.view === id
+      )
+    );
+
+  if(id === "jobs"){
+    renderJobs();
+  }
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+
+/* SIDEBAR */
+
+document
+  .querySelectorAll(".nav button[data-view]")
+  .forEach(button => {
+
+    button.addEventListener("click", () => {
+
+      switchView(button.dataset.view);
+
+    });
+
+  });
+
+
+/* TOAST */
+
+function toast(message){
+
+  const element =
+    document.getElementById("toast");
+
+  element.textContent = message;
+
+  element.style.display = "block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(() => {
+
+      element.style.display = "none";
+
+    },2200);
+
+}
+
+
+/* TASK MODAL */
+
+function openModal(){
+
+  document
+    .getElementById("modal")
+    .style.display = "flex";
+
+}
+
+function closeModal(){
+
+  document
+    .getElementById("modal")
+    .style.display = "none";
+
+}
+
+
+/* AUTH */
+
+const authGate =
+  document.getElementById("authGate");
+
+const authForm =
+  document.getElementById("authForm");
+
+const authTitle =
+  document.getElementById("authTitle");
+
+const authSubtitle =
+  document.getElementById("authSubtitle");
+
+const authSubmit =
+  document.getElementById("authSubmit");
+
+const authError =
+  document.getElementById("authError");
+
+const loginTab =
+  document.getElementById("loginTab");
+
+const signupTab =
+  document.getElementById("signupTab");
+
+const nameField =
+  document.getElementById("nameField");
+
+const roleField =
+  document.getElementById("roleField");
+
+
+function openAuth(mode){
+
+  authGate.classList.remove("hidden");
+
+  setAuthMode(mode);
+
+}
+
+
+function closeAuth(){
+
+  authGate.classList.add("hidden");
+
+}
+
+
+function setAuthMode(mode){
+
+  const signup = mode === "signup";
+
+  loginTab.classList.toggle(
+    "active",
+    !signup
+  );
+
+  signupTab.classList.toggle(
+    "active",
+    signup
+  );
+
+  nameField.style.display =
+    signup ? "block" : "none";
+
+  roleField.style.display =
+    signup ? "block" : "none";
+
+  authTitle.textContent =
+    signup
+      ? "Create your ECONEX account"
+      : "Welcome back";
+
+  authSubtitle.textContent =
+    signup
+      ? "Join the hyperlocal opportunity network."
+      : "Sign in to continue to your ECONEX workspace.";
+
+  authSubmit.textContent =
+    signup
+      ? "Create account"
+      : "Login to ECONEX";
+
+  authError.textContent = "";
+
+}
+
+
+/* AUTH SUBMIT */
+
+authForm.addEventListener("submit",function(event){
+
+  event.preventDefault();
+
+  const signup =
+    signupTab.classList.contains("active");
+
+  const email =
+    document
+      .getElementById("authEmail")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const password =
+    document
+      .getElementById("authPassword")
+      .value;
+
+  const name =
+    document
+      .getElementById("authName")
+      .value
+      .trim();
+
+  const role =
+    document
+      .getElementById("authRole")
+      .value;
+
+
+  if(password.length < 6){
+
+    authError.textContent =
+      "Password must be at least 6 characters.";
+
+    return;
+
+  }
+
+
+  if(signup){
+
+    if(!name){
+
+      authError.textContent =
+        "Please enter your name.";
+
+      return;
+
+    }
+
+    const user = {
+      name,
+      email,
+      password,
+      role
+    };
+
+    localStorage.setItem(
+      "econex_account",
+      JSON.stringify(user)
+    );
+
+    localStorage.setItem(
+      "econex_user",
+      JSON.stringify(user)
+    );
+
+    closeAuth();
+
+    toast("Account created successfully.");
+
+  }else{
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem("econex_account")
+        || "null"
+      );
+
+    if(
+      saved &&
+      saved.email === email &&
+      saved.password === password
+    ){
+
+      localStorage.setItem(
+        "econex_user",
+        JSON.stringify(saved)
+      );
+
+      closeAuth();
+
+      toast("Welcome back to ECONEX.");
+
+    }
+
+    else if(!saved){
+
+      const user = {
+        name:email.split("@")[0],
+        email,
+        password,
+        role:"student"
+      };
+
+      localStorage.setItem(
+        "econex_user",
+        JSON.stringify(user)
+      );
+
+      closeAuth();
+
+      toast("Demo login successful.");
+
+    }
+
+    else{
+
+      authError.textContent =
+        "Incorrect email or password.";
+
+    }
+
+  }
+
+});
+
+
+/* DARK MODE */
+
+function toggleTheme(){
+
+  document.body.classList.toggle(
+    "dark-mode"
+  );
+
+  localStorage.setItem(
+    "econex_theme",
+    document.body.classList.contains("dark-mode")
+      ? "dark"
+      : "light"
+  );
+
+}
+
+
+if(
+  localStorage.getItem("econex_theme")
+  === "dark"
+){
+
+  document.body.classList.add(
+    "dark-mode"
+  );
+
+}
+
+
+/* INITIAL JOBS */
+
+renderJobs();
+
+</script>
+
+</body>
+</html>

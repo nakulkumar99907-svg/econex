@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ECONEX — Hyperlocal Opportunity Network
 
 This package contains the complete working prototype plus a FastAPI backend scaffold.
@@ -68,3 +69,10 @@ Health check: http://127.0.0.1:8000/health
 8. Connect TinyFish/Fetch/Search ingestion.
 9. Add Redis caching and background workers.
 10. Deploy frontend and API separately.
+=======
+# econex
+<br>
+this is my first repositoryc
+<br>
+noy git  not a sinly
+>>>>>>> 6be48472b163dc88e4ac971010d12719ec013fec
